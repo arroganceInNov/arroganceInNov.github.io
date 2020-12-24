@@ -164,9 +164,9 @@
 </blockquote>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>使用 http-server 服务分别运行前端和后端代码，前端监听在 8000 端口，后端在 8001；nginx 开启代理功能，根据不同的 url 请求代理到 8000 或 8001</p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ol>
-<li>安装 http-server<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g http-server</span><br></pre></td></tr></table></figure></li>
-<li>运行代码，在各自项目根目录执行<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 前端项目</span><br><span class="line">http-server -p 8000</span><br><span class="line"></span><br><span class="line"># 后端项目</span><br><span class="line">http-server -p 8001</span><br></pre></td></tr></table></figure></li>
-<li>修改 nginx 的配置文件 nginx.conf<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name www.domain.com</span><br><span class="line"></span><br><span class="line">  # 若 url 请求只是 &#x2F;，就代理到前端的端口</span><br><span class="line">  location &#x2F; &#123;</span><br><span class="line">    proxy_pass http:&#x2F;&#x2F;localhost:8000;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  # 若请求中带 &#x2F;api ，就代理到后端的端口</span><br><span class="line">  location &#x2F;api &#123;</span><br><span class="line">    proxy_pass http:&#x2F;&#x2F;localhost:8001;</span><br><span class="line">    # 同时还要传入 host</span><br><span class="line">    proxy_set_header Host $host;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>安装 http-server<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install <span class="literal">-g</span> http<span class="literal">-server</span></span><br></pre></td></tr></table></figure></li>
+<li>运行代码，在各自项目根目录执行<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 前端项目</span></span><br><span class="line">http<span class="literal">-server</span> <span class="literal">-p</span> <span class="number">8000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 后端项目</span></span><br><span class="line">http<span class="literal">-server</span> <span class="literal">-p</span> <span class="number">8001</span></span><br></pre></td></tr></table></figure></li>
+<li>修改 nginx 的配置文件 nginx.conf<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">  <span class="attribute">server_name</span> www.domain.com</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 若 url 请求只是 /，就代理到前端的端口</span></span><br><span class="line">  location / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://localhost:8000;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 若请求中带 /api ，就代理到后端的端口</span></span><br><span class="line">  <span class="attribute">location</span> /api &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://localhost:8001;</span><br><span class="line">    <span class="comment"># 同时还要传入 host</span></span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host $host;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 
@@ -409,6 +409,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">建站</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">框架</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">全栈</a>
               </li>
              
@@ -418,14 +426,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">nginx</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">建站</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">框架</a>
               </li>
             
             <div class="clearfix"></div>
